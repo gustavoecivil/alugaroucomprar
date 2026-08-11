@@ -12,6 +12,7 @@ import {
 } from '../lib/calculator'
 import { glossario } from '../lib/glossario'
 import InfoTooltip from './InfoTooltip'
+import FipeAutofill from './FipeAutofill'
 
 interface SimuladorFormProps {
   onCompare: (resultados: CenarioRankeado[]) => void
@@ -160,6 +161,8 @@ export default function SimuladorForm({ onCompare }: SimuladorFormProps) {
       </Card>
 
       <Card titulo="Comprar">
+        <FipeAutofill onPriceResolved={(preco) => setComprarDados((prev) => ({ ...prev, precoVeiculo: preco }))} />
+
         <NumberField
           label="Preço do veículo"
           value={comprarDados.precoVeiculo}

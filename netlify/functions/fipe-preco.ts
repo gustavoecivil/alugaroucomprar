@@ -1,0 +1,32 @@
+const FIPE_BASE = 'https://fipe.parallelum.com.br/api/v2/cars'
+
+export default async (req: Request) => {
+  const url = new URL(req.url)
+  const marca = url.searchParams.get('marca')
+  const modelo = url.searchParams.get('modelo')
+  const ano = url.searchParams.get('ano')
+  if (!marca || !modelo || !ano) {
+    return new Response(JSON.stringify({ error: 'missing_params' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' },
+    })
+  }
+
+  try {
+    const res = await fetch(`${FIPE_BASE}/brands/${marca}/models/${modelo}/years/${ano}`)
+    if (!res.ok) throw new Error('fipe_unavailable')
+    const data = await res.json()
+
+    return new Response(JSON.stringify(data), {
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=2592000',
+      },
+    })
+  } catch {
+    return new Response(JSON.stringify({ error: 'fipe_unavailable' }), {
+      status: 502,
+      headers: { 'Content-Type': 'application/json' },
+    })
+  }
+}
