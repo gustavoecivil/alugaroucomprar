@@ -5,11 +5,21 @@
   --foreground: #f5f5f5;
   --primary: #e0af3b;
   --accent: #00b0d5;
+
+  --font-display: 'Fraunces', serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-body);
   margin: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
 }
