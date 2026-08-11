@@ -13,7 +13,7 @@ export default function Hero() {
         style={{ background: 'linear-gradient(to bottom, transparent, var(--background))' }}
       />
 
-      <div className="relative flex w-full max-w-5xl flex-col items-start gap-4 text-left md:w-2/3 lg:w-1/2">
+      <div className="relative flex w-full max-w-5xl flex-col items-start gap-4 pl-12 text-left md:w-2/3 md:pl-24 lg:w-1/2">
         <img src="/branding/logo-branca.png" alt="GSA" className="h-auto w-32" />
 
         <h1 className="text-4xl font-bold sm:text-5xl" style={{ color: 'var(--foreground)' }}>
