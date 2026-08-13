@@ -13,6 +13,7 @@ import {
 import { glossario } from '../lib/glossario'
 import InfoTooltip from './InfoTooltip'
 import FipeAutofill from './FipeAutofill'
+import CombustivelAutofill from './CombustivelAutofill'
 
 interface SimuladorFormProps {
   onCompare: (resultados: CenarioRankeado[]) => void
@@ -91,6 +92,8 @@ export default function SimuladorForm({ onCompare }: SimuladorFormProps) {
     valorRevendaEstimado: 0,
   })
 
+  const [custoCombustivelEstimado, setCustoCombustivelEstimado] = useState(0)
+
   const [modoRisco, setModoRisco] = useState<'manual' | 'automatico'>('manual')
   const [nivelRisco, setNivelRisco] = useState<NivelRisco>('medio')
   const [categoriaRisco, setCategoriaRisco] = useState<CategoriaVeiculo>('intermediario')
@@ -158,6 +161,17 @@ export default function SimuladorForm({ onCompare }: SimuladorFormProps) {
           suffix="% ao ano"
           tooltip={glossario.taxaCustoOportunidade}
         />
+      </Card>
+
+      <Card titulo="Custo de combustível estimado">
+        <CombustivelAutofill onCustoCalculado={setCustoCombustivelEstimado} />
+        {custoCombustivelEstimado > 0 && (
+          <p className="text-xs text-[var(--foreground)]/60 sm:col-span-2">
+            Use esse valor como referência pra preencher manualmente os campos que fizer sentido
+            nos blocos de Comprar, Locar e Assinar abaixo — ele ainda não é preenchido
+            automaticamente em nenhum campo específico.
+          </p>
+        )}
       </Card>
 
       <Card titulo="Comprar">
