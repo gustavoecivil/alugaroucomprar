@@ -13,7 +13,7 @@ interface PrecoUf {
   semana_referencia: string
 }
 
-type TipoCombustivel = 'gasolina' | 'etanol'
+type TipoCombustivel = 'gasolina' | 'etanol' | 'eletrico'
 
 const UFS: { value: string; label: string }[] = [
   { value: 'AC', label: 'Acre' },
@@ -55,6 +55,7 @@ export default function CombustivelAutofill({ onCustoCalculado, consumoAutofill 
   const [precos, setPrecos] = useState<Record<string, PrecoUf> | null>(null)
   const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState(false)
+  const [tarifaEletrica, setTarifaEletrica] = useState<Record<string, number> | null>(null)
 
   const [ufSelecionada, setUfSelecionada] = useState('')
   const [combustivelEscolhido, setCombustivelEscolhido] = useState<TipoCombustivel>('gasolina')
@@ -89,8 +90,24 @@ export default function CombustivelAutofill({ onCustoCalculado, consumoAutofill 
     carregarPrecos()
   }, [])
 
+  useEffect(() => {
+    async function carregarTarifaEletrica() {
+      try {
+        const res = await fetch('/dados/tarifa-eletrica.json')
+        if (!res.ok) return
+        setTarifaEletrica(await res.json())
+      } catch {
+        // tarifa eletrica e opcional: sem ela, a opcao "Eletrico" so fica sem autofill de preco
+      }
+    }
+
+    carregarTarifaEletrica()
+  }, [])
+
   const precoUf = ufSelecionada ? precos?.[ufSelecionada] : undefined
-  const precoCombustivel = precoUf?.[combustivelEscolhido]
+  const tarifaEletricaUf = ufSelecionada ? tarifaEletrica?.[ufSelecionada] : undefined
+  const precoCombustivel =
+    combustivelEscolhido === 'eletrico' ? tarifaEletricaUf : precoUf?.[combustivelEscolhido]
 
   const custoMensal = useMemo(() => {
     if (!precoCombustivel || !consumo || consumo <= 0) return 0
@@ -104,7 +121,9 @@ export default function CombustivelAutofill({ onCustoCalculado, consumoAutofill 
   return (
     <div className="flex flex-col gap-4 rounded-lg border border-white/10 bg-white/5 p-4 sm:col-span-2">
       <span className="text-sm text-[var(--foreground)]/80">
-        Preço real de combustível por estado (ANP)
+        {combustivelEscolhido === 'eletrico'
+          ? 'Tarifa real de energia elétrica por estado (ANEEL)'
+          : 'Preço real de combustível por estado (ANP)'}
       </span>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -140,6 +159,9 @@ export default function CombustivelAutofill({ onCustoCalculado, consumoAutofill 
             <option value="etanol" className="bg-[var(--background)]">
               Etanol
             </option>
+            <option value="eletrico" className="bg-[var(--background)]">
+              Elétrico
+            </option>
           </select>
         </label>
       </div>
@@ -150,13 +172,19 @@ export default function CombustivelAutofill({ onCustoCalculado, consumoAutofill 
         </p>
       )}
 
-      {precoUf && (
-        <p className="text-xs text-[var(--foreground)]/60">
-          Gasolina: R$ {precoUf.gasolina.toFixed(2)}/l · Etanol: R$ {precoUf.etanol.toFixed(2)}/l
-          {' '}
-          (semana de referência: {precoUf.semana_referencia})
-        </p>
-      )}
+      {combustivelEscolhido === 'eletrico'
+        ? tarifaEletricaUf != null && (
+            <p className="text-xs text-[var(--foreground)]/60">
+              Tarifa de energia: R$ {tarifaEletricaUf.toFixed(2)}/kWh
+            </p>
+          )
+        : precoUf && (
+            <p className="text-xs text-[var(--foreground)]/60">
+              Gasolina: R$ {precoUf.gasolina.toFixed(2)}/l · Etanol: R$ {precoUf.etanol.toFixed(2)}/l
+              {' '}
+              (semana de referência: {precoUf.semana_referencia})
+            </p>
+          )}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <label className="flex flex-col gap-1 text-sm">
@@ -188,7 +216,9 @@ export default function CombustivelAutofill({ onCustoCalculado, consumoAutofill 
               placeholder="Ex: 12"
               className={inputClassName}
             />
-            <span className="whitespace-nowrap text-xs text-[var(--foreground)]/60">km/l</span>
+            <span className="whitespace-nowrap text-xs text-[var(--foreground)]/60">
+              {combustivelEscolhido === 'eletrico' ? 'km/kWh' : 'km/l'}
+            </span>
           </div>
         </label>
       </div>
