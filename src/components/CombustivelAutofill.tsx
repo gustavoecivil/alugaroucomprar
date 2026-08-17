@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { formatCurrency } from '../lib/formatCurrency'
+import InfoTooltip from './InfoTooltip'
 
 interface CombustivelAutofillProps {
   onCustoCalculado: (valor: number) => void
+  consumoAutofill?: number | null
 }
 
 interface PrecoUf {
@@ -49,7 +51,7 @@ const selectClassName =
 const inputClassName =
   'w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-[var(--foreground)] outline-none focus:border-[var(--accent)]'
 
-export default function CombustivelAutofill({ onCustoCalculado }: CombustivelAutofillProps) {
+export default function CombustivelAutofill({ onCustoCalculado, consumoAutofill }: CombustivelAutofillProps) {
   const [precos, setPrecos] = useState<Record<string, PrecoUf> | null>(null)
   const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState(false)
@@ -58,6 +60,16 @@ export default function CombustivelAutofill({ onCustoCalculado }: CombustivelAut
   const [combustivelEscolhido, setCombustivelEscolhido] = useState<TipoCombustivel>('gasolina')
   const [kmMes, setKmMes] = useState(0)
   const [consumo, setConsumo] = useState(0)
+  const [consumoPreenchidoAuto, setConsumoPreenchidoAuto] = useState(false)
+  const [ultimoConsumoAutofill, setUltimoConsumoAutofill] = useState<number | null | undefined>(undefined)
+
+  if (consumoAutofill !== ultimoConsumoAutofill) {
+    setUltimoConsumoAutofill(consumoAutofill)
+    if (consumoAutofill != null && consumoAutofill > 0) {
+      setConsumo(consumoAutofill)
+      setConsumoPreenchidoAuto(true)
+    }
+  }
 
   useEffect(() => {
     async function carregarPrecos() {
@@ -159,12 +171,20 @@ export default function CombustivelAutofill({ onCustoCalculado }: CombustivelAut
         </label>
 
         <label className="flex flex-col gap-1 text-sm">
-          <span className="text-[var(--foreground)]/80">Consumo médio</span>
+          <span className="text-[var(--foreground)]/80">
+            Consumo médio
+            {consumoPreenchidoAuto && (
+              <InfoTooltip texto="Consumo estimado pelo INMETRO para este veículo" />
+            )}
+          </span>
           <div className="flex items-center gap-2">
             <input
               type="number"
               value={Number.isNaN(consumo) || consumo === 0 ? '' : consumo}
-              onChange={(e) => setConsumo(e.target.value === '' ? 0 : Number(e.target.value))}
+              onChange={(e) => {
+                setConsumo(e.target.value === '' ? 0 : Number(e.target.value))
+                setConsumoPreenchidoAuto(false)
+              }}
               placeholder="Ex: 12"
               className={inputClassName}
             />

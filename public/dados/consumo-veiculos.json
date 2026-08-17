@@ -1,0 +1,578 @@
+{
+  "13-11214": {
+    "confianca_match": "exato",
+    "consumo_km_l": 13.2
+  },
+  "13-11646": {
+    "confianca_match": "exato",
+    "consumo_km_l": 13.1
+  },
+  "13-12012": {
+    "confianca_match": "exato",
+    "consumo_km_l": 13.7
+  },
+  "13-301": {
+    "confianca_match": "exato",
+    "consumo_km_l": 10.6
+  },
+  "13-5338": {
+    "confianca_match": "exato",
+    "consumo_km_l": 12.0
+  },
+  "156-4892": {
+    "confianca_match": "exato",
+    "consumo_km_l": 12.9
+  },
+  "177-11225": {
+    "confianca_match": "exato",
+    "consumo_km_l": 9.6
+  },
+  "185-10650": {
+    "confianca_match": "exato",
+    "consumo_km_l": 6.5
+  },
+  "185-10736": {
+    "confianca_match": "exato",
+    "consumo_km_l": 9.8
+  },
+  "185-11875": {
+    "confianca_match": "exato",
+    "consumo_km_l": 10.2
+  },
+  "190-11515": {
+    "confianca_match": "exato",
+    "consumo_km_l": 9.3
+  },
+  "199-11947": {
+    "confianca_match": "exato",
+    "consumo_km_l": 13.9
+  },
+  "20-10159": {
+    "confianca_match": "exato",
+    "consumo_km_l": 7.2
+  },
+  "20-10995": {
+    "confianca_match": "exato",
+    "consumo_km_l": 4.8
+  },
+  "20-9528": {
+    "confianca_match": "exato",
+    "consumo_km_l": 7.7
+  },
+  "21-10754": {
+    "confianca_match": "exato",
+    "consumo_km_l": 12.8
+  },
+  "21-11001": {
+    "confianca_match": "exato",
+    "consumo_km_l": 10.4
+  },
+  "21-11401": {
+    "confianca_match": "exato",
+    "consumo_km_l": 13.9
+  },
+  "21-12038": {
+    "confianca_match": "exato",
+    "consumo_km_l": 10.9
+  },
+  "21-462": {
+    "confianca_match": "exato",
+    "consumo_km_l": 10.6
+  },
+  "21-472": {
+    "confianca_match": "exato",
+    "consumo_km_l": 13.0
+  },
+  "21-607": {
+    "confianca_match": "exato",
+    "consumo_km_l": 12.9
+  },
+  "21-7825": {
+    "confianca_match": "exato",
+    "consumo_km_l": 14.9
+  },
+  "21-9647": {
+    "confianca_match": "exato",
+    "consumo_km_l": 13.3
+  },
+  "21-9919": {
+    "confianca_match": "exato",
+    "consumo_km_l": 13.1
+  },
+  "21-9988": {
+    "confianca_match": "exato",
+    "consumo_km_l": 14.2
+  },
+  "211-10364": {
+    "confianca_match": "exato",
+    "consumo_km_l": 7.5
+  },
+  "211-11095": {
+    "confianca_match": "exato",
+    "consumo_km_l": 6.7
+  },
+  "22-11489": {
+    "confianca_match": "exato",
+    "consumo_km_l": 9.6
+  },
+  "22-11612": {
+    "confianca_match": "exato",
+    "consumo_km_l": 7.6
+  },
+  "22-11775": {
+    "confianca_match": "exato",
+    "consumo_km_l": 11.3
+  },
+  "22-6202": {
+    "confianca_match": "exato",
+    "consumo_km_l": 9.8
+  },
+  "22-840": {
+    "confianca_match": "exato",
+    "consumo_km_l": 7.8
+  },
+  "22-9163": {
+    "confianca_match": "exato",
+    "consumo_km_l": 10.0
+  },
+  "23-1119": {
+    "confianca_match": "exato",
+    "consumo_km_l": 10.5
+  },
+  "23-11318": {
+    "confianca_match": "exato",
+    "consumo_km_l": 9.8
+  },
+  "23-11617": {
+    "confianca_match": "exato",
+    "consumo_km_l": 14.2
+  },
+  "23-1174": {
+    "confianca_match": "exato",
+    "consumo_km_l": 6.6
+  },
+  "23-11803": {
+    "confianca_match": "exato",
+    "consumo_km_l": 11.6
+  },
+  "23-12002": {
+    "confianca_match": "exato",
+    "consumo_km_l": 13.4
+  },
+  "23-5030": {
+    "confianca_match": "exato",
+    "consumo_km_l": 12.8
+  },
+  "23-6269": {
+    "confianca_match": "exato",
+    "consumo_km_l": 10.5
+  },
+  "23-9597": {
+    "confianca_match": "exato",
+    "consumo_km_l": 12.5
+  },
+  "238-11078": {
+    "confianca_match": "exato",
+    "consumo_km_l": 15.0
+  },
+  "238-11084": {
+    "confianca_match": "exato",
+    "consumo_km_l": 11.8
+  },
+  "238-11106": {
+    "confianca_match": "exato",
+    "consumo_km_l": 13.1
+  },
+  "238-11277": {
+    "confianca_match": "exato",
+    "consumo_km_l": 8.6
+  },
+  "238-11920": {
+    "confianca_match": "exato",
+    "consumo_km_l": 11.1
+  },
+  "240-11433": {
+    "confianca_match": "exato",
+    "consumo_km_l": 7.6
+  },
+  "240-11644": {
+    "confianca_match": "exato",
+    "consumo_km_l": 9.7
+  },
+  "240-11651": {
+    "confianca_match": "exato",
+    "consumo_km_l": 9.9
+  },
+  "240-11735": {
+    "confianca_match": "exato",
+    "consumo_km_l": 9.9
+  },
+  "240-11794": {
+    "confianca_match": "exato",
+    "consumo_km_l": 12.5
+  },
+  "245-10067": {
+    "confianca_match": "exato",
+    "consumo_km_l": 11.1
+  },
+  "245-10068": {
+    "confianca_match": "exato",
+    "consumo_km_l": 11.7
+  },
+  "245-11198": {
+    "confianca_match": "exato",
+    "consumo_km_l": 11.4
+  },
+  "25-10894": {
+    "confianca_match": "exato",
+    "consumo_km_l": 11.4
+  },
+  "25-5372": {
+    "confianca_match": "exato",
+    "consumo_km_l": 14.2
+  },
+  "25-7150": {
+    "confianca_match": "exato",
+    "consumo_km_l": 12.7
+  },
+  "25-7899": {
+    "confianca_match": "exato",
+    "consumo_km_l": 12.4
+  },
+  "251-11453": {
+    "confianca_match": "exato",
+    "consumo_km_l": 14.3
+  },
+  "252-11747": {
+    "confianca_match": "exato",
+    "consumo_km_l": 14.1
+  },
+  "252-11749": {
+    "confianca_match": "exato",
+    "consumo_km_l": 12.9
+  },
+  "254-11495": {
+    "confianca_match": "exato",
+    "consumo_km_l": 12.9
+  },
+  "254-11928": {
+    "confianca_match": "exato",
+    "consumo_km_l": 10.9
+  },
+  "26-10757": {
+    "confianca_match": "exato",
+    "consumo_km_l": 17.2
+  },
+  "26-11991": {
+    "confianca_match": "exato",
+    "consumo_km_l": 12.4
+  },
+  "26-8240": {
+    "confianca_match": "exato",
+    "consumo_km_l": 14.2
+  },
+  "26-8854": {
+    "confianca_match": "exato",
+    "consumo_km_l": 14.2
+  },
+  "263-12106": {
+    "confianca_match": "exato",
+    "consumo_km_l": 8.2
+  },
+  "265-11966": {
+    "confianca_match": "exato",
+    "consumo_km_l": 11.4
+  },
+  "29-10008": {
+    "confianca_match": "exato",
+    "consumo_km_l": 6.7
+  },
+  "29-11732": {
+    "confianca_match": "exato",
+    "consumo_km_l": 11.4
+  },
+  "29-1384": {
+    "confianca_match": "exato",
+    "consumo_km_l": 7.3
+  },
+  "29-4139": {
+    "confianca_match": "exato",
+    "consumo_km_l": 10.6
+  },
+  "29-5743": {
+    "confianca_match": "exato",
+    "consumo_km_l": 10.6
+  },
+  "31-10104": {
+    "confianca_match": "exato",
+    "consumo_km_l": 17.1
+  },
+  "31-1405": {
+    "confianca_match": "exato",
+    "consumo_km_l": 11.1
+  },
+  "31-1424": {
+    "confianca_match": "exato",
+    "consumo_km_l": 12.8
+  },
+  "33-1458": {
+    "confianca_match": "exato",
+    "consumo_km_l": 10.7
+  },
+  "33-1472": {
+    "confianca_match": "exato",
+    "consumo_km_l": 8.0
+  },
+  "33-5705": {
+    "confianca_match": "aproximado",
+    "consumo_km_l": 8.4
+  },
+  "33-8040": {
+    "confianca_match": "exato",
+    "consumo_km_l": 8.0
+  },
+  "33-8085": {
+    "confianca_match": "aproximado",
+    "consumo_km_l": 8.8
+  },
+  "33-9022": {
+    "confianca_match": "exato",
+    "consumo_km_l": 8.4
+  },
+  "34-11281": {
+    "confianca_match": "exato",
+    "consumo_km_l": 16.1
+  },
+  "41-11623": {
+    "confianca_match": "exato",
+    "consumo_km_l": 10.9
+  },
+  "41-11757": {
+    "confianca_match": "exato",
+    "consumo_km_l": 10.8
+  },
+  "41-5503": {
+    "confianca_match": "exato",
+    "consumo_km_l": 11.0
+  },
+  "43-11086": {
+    "confianca_match": "exato",
+    "consumo_km_l": 13.2
+  },
+  "43-11918": {
+    "confianca_match": "exato",
+    "consumo_km_l": 12.5
+  },
+  "43-1823": {
+    "confianca_match": "exato",
+    "consumo_km_l": 12.5
+  },
+  "43-8020": {
+    "confianca_match": "exato",
+    "consumo_km_l": 13.0
+  },
+  "44-11626": {
+    "confianca_match": "exato",
+    "consumo_km_l": 13.1
+  },
+  "44-1943": {
+    "confianca_match": "exato",
+    "consumo_km_l": 10.6
+  },
+  "44-6397": {
+    "confianca_match": "exato",
+    "consumo_km_l": 13.6
+  },
+  "44-9760": {
+    "confianca_match": "exato",
+    "consumo_km_l": 13.1
+  },
+  "47-12013": {
+    "confianca_match": "exato",
+    "consumo_km_l": 7.6
+  },
+  "47-12131": {
+    "confianca_match": "exato",
+    "consumo_km_l": 7.8
+  },
+  "47-1980": {
+    "confianca_match": "exato",
+    "consumo_km_l": 8.0
+  },
+  "47-3902": {
+    "confianca_match": "exato",
+    "consumo_km_l": 8.0
+  },
+  "47-6275": {
+    "confianca_match": "exato",
+    "consumo_km_l": 8.2
+  },
+  "47-7633": {
+    "confianca_match": "exato",
+    "consumo_km_l": 7.5
+  },
+  "48-11649": {
+    "confianca_match": "exato",
+    "consumo_km_l": 13.3
+  },
+  "48-11709": {
+    "confianca_match": "exato",
+    "consumo_km_l": 12.4
+  },
+  "48-11774": {
+    "confianca_match": "exato",
+    "consumo_km_l": 14.9
+  },
+  "48-11950": {
+    "confianca_match": "exato",
+    "consumo_km_l": 12.6
+  },
+  "48-2034": {
+    "confianca_match": "exato",
+    "consumo_km_l": 11.3
+  },
+  "48-5671": {
+    "confianca_match": "exato",
+    "consumo_km_l": 11.4
+  },
+  "48-9870": {
+    "confianca_match": "exato",
+    "consumo_km_l": 11.5
+  },
+  "56-11849": {
+    "confianca_match": "exato",
+    "consumo_km_l": 9.3
+  },
+  "56-11888": {
+    "confianca_match": "exato",
+    "consumo_km_l": 16.6
+  },
+  "56-11998": {
+    "confianca_match": "exato",
+    "consumo_km_l": 14.8
+  },
+  "56-2228": {
+    "confianca_match": "exato",
+    "consumo_km_l": 14.3
+  },
+  "56-9325": {
+    "confianca_match": "exato",
+    "consumo_km_l": 13.3
+  },
+  "59-11462": {
+    "confianca_match": "exato",
+    "consumo_km_l": 13.2
+  },
+  "59-11467": {
+    "confianca_match": "exato",
+    "consumo_km_l": 13.7
+  },
+  "59-2453": {
+    "confianca_match": "exato",
+    "consumo_km_l": 11.3
+  },
+  "59-2457": {
+    "confianca_match": "exato",
+    "consumo_km_l": 11.9
+  },
+  "59-5476": {
+    "confianca_match": "exato",
+    "consumo_km_l": 8.8
+  },
+  "59-8070": {
+    "confianca_match": "exato",
+    "consumo_km_l": 14.4
+  },
+  "59-8427": {
+    "confianca_match": "exato",
+    "consumo_km_l": 14.0
+  },
+  "59-8642": {
+    "confianca_match": "exato",
+    "consumo_km_l": 13.2
+  },
+  "59-9530": {
+    "confianca_match": "exato",
+    "consumo_km_l": 12.2
+  },
+  "6-11367": {
+    "confianca_match": "exato",
+    "consumo_km_l": 11.5
+  },
+  "6-11780": {
+    "confianca_match": "exato",
+    "consumo_km_l": 7.9
+  },
+  "6-11850": {
+    "confianca_match": "exato",
+    "consumo_km_l": 9.2
+  },
+  "6-11986": {
+    "confianca_match": "exato",
+    "consumo_km_l": 9.7
+  },
+  "6-4798": {
+    "confianca_match": "exato",
+    "consumo_km_l": 10.0
+  },
+  "6-8175": {
+    "confianca_match": "exato",
+    "consumo_km_l": 8.6
+  },
+  "6-9292": {
+    "confianca_match": "aproximado",
+    "consumo_km_l": 8.9
+  },
+  "7-10414": {
+    "confianca_match": "exato",
+    "consumo_km_l": 11.8
+  },
+  "7-10825": {
+    "confianca_match": "exato",
+    "consumo_km_l": 8.2
+  },
+  "7-11112": {
+    "confianca_match": "exato",
+    "consumo_km_l": 10.9
+  },
+  "7-11268": {
+    "confianca_match": "exato",
+    "consumo_km_l": 8.7
+  },
+  "7-161": {
+    "confianca_match": "exato",
+    "consumo_km_l": 11.8
+  },
+  "7-232": {
+    "confianca_match": "exato",
+    "consumo_km_l": 8.2
+  },
+  "7-241": {
+    "confianca_match": "exato",
+    "consumo_km_l": 10.8
+  },
+  "7-242": {
+    "confianca_match": "exato",
+    "consumo_km_l": 9.6
+  },
+  "7-5189": {
+    "confianca_match": "exato",
+    "consumo_km_l": 9.6
+  },
+  "7-9038": {
+    "confianca_match": "exato",
+    "consumo_km_l": 8.3
+  },
+  "7-9785": {
+    "confianca_match": "exato",
+    "consumo_km_l": 11.2
+  },
+  "7-9956": {
+    "confianca_match": "exato",
+    "consumo_km_l": 10.0
+  },
+  "7-9959": {
+    "confianca_match": "exato",
+    "consumo_km_l": 11.6
+  }
+}
