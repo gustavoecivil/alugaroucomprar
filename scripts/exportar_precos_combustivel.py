@@ -23,7 +23,7 @@ from pathlib import Path
 
 import duckdb
 
-DB_PATH = Path(r"C:\Users\gusta\indice-gsa-veicular\data\processed\indice_gsa.duckdb")
+DB_PATH = Path(r"D:\indice-gsa-veicular\data\processed\indice_gsa.duckdb")
 OUTPUT_PATH = Path(__file__).resolve().parents[1] / "public" / "dados" / "precos-combustivel.json"
 
 FUEL_MAP = {
