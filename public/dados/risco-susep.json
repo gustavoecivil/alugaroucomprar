@@ -1,0 +1,18 @@
+{
+  "eletrico": {
+    "amostraModelosIvr": 1,
+    "valor": 0.0
+  },
+  "intermediario": {
+    "amostraModelosIvr": 263,
+    "valor": 0.037822
+  },
+  "popular": {
+    "amostraModelosIvr": 193,
+    "valor": 0.048798
+  },
+  "premium": {
+    "amostraModelosIvr": 38,
+    "valor": 0.04506
+  }
+}

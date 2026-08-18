@@ -6,6 +6,7 @@ export const glossario = {
   valorRevenda: "Quanto você espera conseguir vender o carro ao final do horizonte simulado — a principal fonte de incerteza no cálculo de Comprar.",
   risco: "O quanto o valor real de revenda pode variar em relação ao estimado. Quanto maior o risco, maior a diferença entre o custo mínimo e o máximo mostrados no resultado.",
   riscoAutomaticoReal: "Calculado a partir de dado real da tabela FIPE (Índice GSA), não é mais estimativa — mas reflete a variação observada em até 12 meses de histórico. Se o horizonte da sua simulação for maior que isso, o risco real de revenda pode ser diferente do medido aqui.",
+  riscoSinistroRoubo: "Métrica diferente do risco de desvalorização acima: reflete sinistralidade e roubo/furto reais por categoria de veículo (índice de Roubo/Furto da SUSEP/IVR), não variação de preço da FIPE. Os dois riscos não são somados — ficam sempre separados. A categoria elétrico tem amostra ainda pequena nessa fonte (poucos modelos elétricos no histórico da SUSEP), então esse número é preliminar para ela.",
   ipva: "Imposto anual sobre a propriedade do veículo, calculado sobre o valor de mercado do carro. Só existe em Comprar.",
   kmIncluso: "Quilometragem mensal já paga dentro da mensalidade de locação/assinatura. Rodar além disso costuma gerar cobrança extra.",
   multaRescisao: "Valor cobrado caso você encerre o contrato de locação antes do prazo combinado.",

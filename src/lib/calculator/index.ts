@@ -4,7 +4,7 @@ import { calcularLocar } from './locar'
 import { calcularAssinar } from './assinar'
 
 export * from './types'
-export { getFaixaRisco } from './risco'
+export { getFaixaRisco, getRiscoSinistroRoubo } from './risco'
 export { calcularComprar } from './comprar'
 export { calcularLocar } from './locar'
 export { calcularAssinar } from './assinar'

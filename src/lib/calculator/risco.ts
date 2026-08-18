@@ -17,6 +17,7 @@
 // do mesmo jeito que fizemos pro modo automático.
 
 import type { EntradaComprar, NivelRisco, CategoriaVeiculo } from './types'
+import riscoSusepData from '../../../public/dados/risco-susep.json'
 
 const MARGEM_POR_NIVEL: Record<NivelRisco, number> = {
   baixo: 0.05,
@@ -36,4 +37,39 @@ export function getFaixaRisco(risco: EntradaComprar['risco']): number {
     return MARGEM_POR_NIVEL[risco.nivel]
   }
   return MARGEM_POR_CATEGORIA[risco.categoria]
+}
+
+// Risco de sinistro/roubo (SUSEP): métrica DIFERENTE do risco de
+// desvalorização acima — reflete sinistralidade/roubo real por
+// categoria (índice de Roubo/Furto do IVR, ferramenta oficial da
+// SUSEP), não variação de preço da FIPE. As duas não são somadas nem
+// combinadas num número só; ficam sempre separadas — ver
+// docs/METODOLOGIA_RISCO_SUSEP.md no projeto indice-gsa-veicular pro
+// detalhamento do cálculo e suas limitações.
+interface EntradaRiscoSinistroRoubo {
+  valor: number
+  amostraModelosIvr: number
+}
+
+const riscoSinistroRoubo = riscoSusepData as Record<CategoriaVeiculo, EntradaRiscoSinistroRoubo>
+
+// Abaixo desse número de modelos do IVR, o valor não é confiável — é
+// literalmente 0% por falta de dado (caso do elétrico hoje, com 1 único
+// modelo), não porque o risco real medido seja zero. Ver
+// scripts/exportar_risco_susep.py.
+const AMOSTRA_MINIMA_MODELOS_IVR = 5
+
+export interface RiscoSinistroRoubo {
+  valor: number
+  amostraModelosIvr: number
+  amostraSuficiente: boolean
+}
+
+export function getRiscoSinistroRoubo(categoria: CategoriaVeiculo): RiscoSinistroRoubo {
+  const entrada = riscoSinistroRoubo[categoria]
+  return {
+    valor: entrada.valor,
+    amostraModelosIvr: entrada.amostraModelosIvr,
+    amostraSuficiente: entrada.amostraModelosIvr >= AMOSTRA_MINIMA_MODELOS_IVR,
+  }
 }

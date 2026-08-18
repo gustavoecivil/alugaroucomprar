@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 import {
   compararCenarios,
+  getRiscoSinistroRoubo,
   type CenarioRankeado,
   type EntradaComum,
   type EntradaComprar,
@@ -98,6 +99,7 @@ export default function SimuladorForm({ onCompare }: SimuladorFormProps) {
   const [modoRisco, setModoRisco] = useState<'manual' | 'automatico'>('manual')
   const [nivelRisco, setNivelRisco] = useState<NivelRisco>('medio')
   const [categoriaRisco, setCategoriaRisco] = useState<CategoriaVeiculo>('intermediario')
+  const riscoSinistroRoubo = getRiscoSinistroRoubo(categoriaRisco)
 
   const [locar, setLocar] = useState<EntradaLocar>({
     mensalidade: 0,
@@ -287,10 +289,19 @@ export default function SimuladorForm({ onCompare }: SimuladorFormProps) {
           )}
 
           {modoRisco === 'automatico' && (
-            <p className="flex items-center text-xs text-[var(--foreground)]/60">
-              Baseado em dado real da FIPE, não estimativa
-              <InfoTooltip texto={glossario.riscoAutomaticoReal} />
-            </p>
+            <>
+              <p className="flex items-center text-xs text-[var(--foreground)]/60">
+                Baseado em dado real da FIPE, não estimativa
+                <InfoTooltip texto={glossario.riscoAutomaticoReal} />
+              </p>
+              <p className="flex items-center text-xs text-[var(--foreground)]/60">
+                Risco de sinistro/roubo (SUSEP):{' '}
+                {riscoSinistroRoubo.amostraSuficiente
+                  ? `${(riscoSinistroRoubo.valor * 100).toFixed(2)}%`
+                  : 'Dado insuficiente ainda para elétricos'}
+                <InfoTooltip texto={glossario.riscoSinistroRoubo} />
+              </p>
+            </>
           )}
         </div>
       </Card>
