@@ -285,6 +285,13 @@ export default function SimuladorForm({ onCompare }: SimuladorFormProps) {
               ))}
             </select>
           )}
+
+          {modoRisco === 'automatico' && (
+            <p className="flex items-center text-xs text-[var(--foreground)]/60">
+              Baseado em dado real da FIPE, não estimativa
+              <InfoTooltip texto={glossario.riscoAutomaticoReal} />
+            </p>
+          )}
         </div>
       </Card>
 

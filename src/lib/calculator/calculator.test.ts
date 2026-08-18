@@ -12,11 +12,11 @@ describe('getFaixaRisco', () => {
     expect(getFaixaRisco({ modo: 'manual', nivel: 'alto' })).toBeCloseTo(0.18)
   })
 
-  it('retorna as margens da tabela no modo automático por categoria', () => {
-    expect(getFaixaRisco({ modo: 'automatico', categoria: 'popular' })).toBeCloseTo(0.05)
-    expect(getFaixaRisco({ modo: 'automatico', categoria: 'intermediario' })).toBeCloseTo(0.1)
-    expect(getFaixaRisco({ modo: 'automatico', categoria: 'premium' })).toBeCloseTo(0.18)
-    expect(getFaixaRisco({ modo: 'automatico', categoria: 'eletrico' })).toBeCloseTo(0.15)
+  it('retorna as margens reais do Índice GSA no modo automático por categoria', () => {
+    expect(getFaixaRisco({ modo: 'automatico', categoria: 'popular' })).toBeCloseTo(0.0183)
+    expect(getFaixaRisco({ modo: 'automatico', categoria: 'intermediario' })).toBeCloseTo(0.0207)
+    expect(getFaixaRisco({ modo: 'automatico', categoria: 'premium' })).toBeCloseTo(0.0259)
+    expect(getFaixaRisco({ modo: 'automatico', categoria: 'eletrico' })).toBeCloseTo(0.0293)
   })
 })
 
