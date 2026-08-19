@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
-interface FipeAutofillProps {
-  onPriceResolved: (preco: number) => void
+export interface FipeAutofillProps {
+  onPriceResolved: (price: number, label: string) => void
   onConsumoResolved?: (consumo: number) => void
   onCombustivelResolved?: (combustivel: string) => void
 }
@@ -13,39 +13,37 @@ interface FipeItem {
 
 interface ConsumoVeiculo {
   consumo_km_l: number
-  confianca_match: string
 }
 
-function parsePrecoFipe(valor: string): number | null {
-  const limpo = valor.replace(/[^\d,]/g, '').replace(',', '.')
-  const numero = Number(limpo)
-  return Number.isNaN(numero) ? null : numero
+function parsePrecoFipe(valor: unknown): number | null {
+  if (typeof valor !== 'string') return null
+  const numero = Number(valor.replace('R$ ', '').replace(/\./g, '').replace(',', '.'))
+  return Number.isFinite(numero) ? numero : null
 }
 
 const selectClassName =
   'w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-[var(--foreground)] outline-none focus:border-[var(--accent)] disabled:cursor-not-allowed disabled:text-[var(--foreground)]/40'
 
-export default function FipeAutofill({ onPriceResolved, onConsumoResolved, onCombustivelResolved }: FipeAutofillProps) {
+export default function FipeAutofill({
+  onPriceResolved,
+  onConsumoResolved,
+  onCombustivelResolved,
+}: FipeAutofillProps) {
   const [marcas, setMarcas] = useState<FipeItem[]>([])
   const [modelos, setModelos] = useState<FipeItem[]>([])
   const [anos, setAnos] = useState<FipeItem[]>([])
   const [consumoPorVeiculo, setConsumoPorVeiculo] = useState<Record<string, ConsumoVeiculo>>({})
-
   const [marcaSelecionada, setMarcaSelecionada] = useState('')
   const [modeloSelecionado, setModeloSelecionado] = useState('')
   const [anoSelecionado, setAnoSelecionado] = useState('')
-
-  const [carregandoMarcas, setCarregandoMarcas] = useState(false)
+  const [carregandoMarcas, setCarregandoMarcas] = useState(true)
   const [carregandoModelos, setCarregandoModelos] = useState(false)
   const [carregandoAnos, setCarregandoAnos] = useState(false)
   const [carregandoPreco, setCarregandoPreco] = useState(false)
-
   const [erro, setErro] = useState(false)
 
   useEffect(() => {
     async function carregarMarcas() {
-      setCarregandoMarcas(true)
-      setErro(false)
       try {
         const res = await fetch('/.netlify/functions/fipe-marcas')
         if (!res.ok) throw new Error('fipe_unavailable')
@@ -64,10 +62,9 @@ export default function FipeAutofill({ onPriceResolved, onConsumoResolved, onCom
     async function carregarConsumo() {
       try {
         const res = await fetch('/dados/consumo-veiculos.json')
-        if (!res.ok) return
-        setConsumoPorVeiculo(await res.json())
+        if (res.ok) setConsumoPorVeiculo(await res.json())
       } catch {
-        // snapshot de consumo e opcional: sem ele, o campo de consumo so fica sem autofill
+        // O preenchimento opcional de consumo não impede o uso da FIPE.
       }
     }
 
@@ -85,7 +82,7 @@ export default function FipeAutofill({ onPriceResolved, onConsumoResolved, onCom
     setCarregandoModelos(true)
     setErro(false)
     try {
-      const res = await fetch(`/.netlify/functions/fipe-modelos?marca=${marca}`)
+      const res = await fetch(`/.netlify/functions/fipe-modelos?marca=${encodeURIComponent(marca)}`)
       if (!res.ok) throw new Error('fipe_unavailable')
       setModelos(await res.json())
     } catch {
@@ -104,7 +101,9 @@ export default function FipeAutofill({ onPriceResolved, onConsumoResolved, onCom
     setCarregandoAnos(true)
     setErro(false)
     try {
-      const res = await fetch(`/.netlify/functions/fipe-anos?marca=${marcaSelecionada}&modelo=${modelo}`)
+      const res = await fetch(
+        `/.netlify/functions/fipe-anos?marca=${encodeURIComponent(marcaSelecionada)}&modelo=${encodeURIComponent(modelo)}`,
+      )
       if (!res.ok) throw new Error('fipe_unavailable')
       setAnos(await res.json())
     } catch {
@@ -122,19 +121,19 @@ export default function FipeAutofill({ onPriceResolved, onConsumoResolved, onCom
     setErro(false)
     try {
       const res = await fetch(
-        `/.netlify/functions/fipe-preco?marca=${marcaSelecionada}&modelo=${modeloSelecionado}&ano=${ano}`,
+        `/.netlify/functions/fipe-preco?marca=${encodeURIComponent(marcaSelecionada)}&modelo=${encodeURIComponent(modeloSelecionado)}&ano=${encodeURIComponent(ano)}`,
       )
       if (!res.ok) throw new Error('fipe_unavailable')
       const data = await res.json()
-      const preco = parsePrecoFipe(data.price)
-      if (preco !== null) onPriceResolved(preco)
+      const price = parsePrecoFipe(data.price)
+      const marca = marcas.find((item) => item.code === marcaSelecionada)?.name ?? marcaSelecionada
+      const modelo = modelos.find((item) => item.code === modeloSelecionado)?.name ?? modeloSelecionado
+      const anoLabel = anos.find((item) => item.code === ano)?.name ?? ano
+
+      if (price !== null) onPriceResolved(price, `${marca} ${modelo} ${anoLabel}`)
 
       const consumo = consumoPorVeiculo[`${marcaSelecionada}-${modeloSelecionado}`]
       if (consumo) onConsumoResolved?.(consumo.consumo_km_l)
-
-      // "fuel" e o campo real da API da FIPE (confirmado por chamada direta:
-      // valores como "Gasolina", "Flex", "Diesel", "Eletrico" -- ver
-      // CombustivelAutofill.tsx pra como isso filtra as opcoes do select).
       if (typeof data.fuel === 'string' && data.fuel) onCombustivelResolved?.(data.fuel)
     } catch {
       setErro(true)
@@ -146,73 +145,31 @@ export default function FipeAutofill({ onPriceResolved, onConsumoResolved, onCom
   return (
     <div className="flex flex-col gap-2 rounded-lg border border-white/10 bg-white/5 p-4 sm:col-span-2">
       <span className="text-sm text-[var(--foreground)]/80">Preencher preço pela tabela FIPE</span>
-
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <label className="flex flex-col gap-1 text-sm">
           <span className="text-[var(--foreground)]/80">Marca</span>
-          <select
-            value={marcaSelecionada}
-            onChange={(e) => handleMarcaChange(e.target.value)}
-            disabled={carregandoMarcas}
-            className={selectClassName}
-          >
-            <option value="" className="bg-[var(--background)]">
-              {carregandoMarcas ? 'Carregando...' : 'Selecione'}
-            </option>
-            {marcas.map((marca) => (
-              <option key={marca.code} value={marca.code} className="bg-[var(--background)]">
-                {marca.name}
-              </option>
-            ))}
+          <select value={marcaSelecionada} onChange={(e) => handleMarcaChange(e.target.value)} disabled={carregandoMarcas} className={selectClassName}>
+            <option value="" className="bg-[var(--background)]">{carregandoMarcas ? 'Carregando...' : 'Selecione'}</option>
+            {marcas.map((marca) => <option key={marca.code} value={marca.code} className="bg-[var(--background)]">{marca.name}</option>)}
           </select>
         </label>
-
         <label className="flex flex-col gap-1 text-sm">
           <span className="text-[var(--foreground)]/80">Modelo</span>
-          <select
-            value={modeloSelecionado}
-            onChange={(e) => handleModeloChange(e.target.value)}
-            disabled={!marcaSelecionada || carregandoModelos}
-            className={selectClassName}
-          >
-            <option value="" className="bg-[var(--background)]">
-              {carregandoModelos ? 'Carregando...' : 'Selecione'}
-            </option>
-            {modelos.map((modelo) => (
-              <option key={modelo.code} value={modelo.code} className="bg-[var(--background)]">
-                {modelo.name}
-              </option>
-            ))}
+          <select value={modeloSelecionado} onChange={(e) => handleModeloChange(e.target.value)} disabled={!marcaSelecionada || carregandoModelos} className={selectClassName}>
+            <option value="" className="bg-[var(--background)]">{carregandoModelos ? 'Carregando...' : 'Selecione'}</option>
+            {modelos.map((modelo) => <option key={modelo.code} value={modelo.code} className="bg-[var(--background)]">{modelo.name}</option>)}
           </select>
         </label>
-
         <label className="flex flex-col gap-1 text-sm">
           <span className="text-[var(--foreground)]/80">Ano</span>
-          <select
-            value={anoSelecionado}
-            onChange={(e) => handleAnoChange(e.target.value)}
-            disabled={!modeloSelecionado || carregandoAnos}
-            className={selectClassName}
-          >
-            <option value="" className="bg-[var(--background)]">
-              {carregandoAnos ? 'Carregando...' : 'Selecione'}
-            </option>
-            {anos.map((ano) => (
-              <option key={ano.code} value={ano.code} className="bg-[var(--background)]">
-                {ano.name}
-              </option>
-            ))}
+          <select value={anoSelecionado} onChange={(e) => handleAnoChange(e.target.value)} disabled={!modeloSelecionado || carregandoAnos} className={selectClassName}>
+            <option value="" className="bg-[var(--background)]">{carregandoAnos ? 'Carregando...' : 'Selecione'}</option>
+            {anos.map((ano) => <option key={ano.code} value={ano.code} className="bg-[var(--background)]">{ano.name}</option>)}
           </select>
         </label>
       </div>
-
       {carregandoPreco && <p className="text-xs text-[var(--foreground)]/60">Buscando preço na FIPE...</p>}
-
-      {erro && (
-        <p className="text-xs text-[var(--foreground)]/70">
-          Não foi possível carregar dados da FIPE agora — preencha o preço manualmente abaixo.
-        </p>
-      )}
+      {erro && <div className="text-xs text-[var(--foreground)]/70">Não foi possível carregar dados da FIPE  preencha o preço manualmente abaixo</div>}
     </div>
   )
 }

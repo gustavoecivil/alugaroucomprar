@@ -1,32 +1,14 @@
-const FIPE_BASE = 'https://fipe.parallelum.com.br/api/v2/cars'
+import type { Handler } from "@netlify/functions";
 
-export default async (req: Request) => {
-  const url = new URL(req.url)
-  const marca = url.searchParams.get('marca')
-  const modelo = url.searchParams.get('modelo')
-  const ano = url.searchParams.get('ano')
-  if (!marca || !modelo || !ano) {
-    return new Response(JSON.stringify({ error: 'missing_params' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
-    })
-  }
+export const handler: Handler = async (event) => {
+  const { marca, modelo, ano } = event.queryStringParameters ?? {};
+  if (!marca || !modelo || !ano) return { statusCode: 400, body: JSON.stringify({ error: "missing params" }) };
 
   try {
-    const res = await fetch(`${FIPE_BASE}/brands/${marca}/models/${modelo}/years/${ano}`)
-    if (!res.ok) throw new Error('fipe_unavailable')
+    const res = await fetch(`https://fipe.parallelum.com.br/api/v2/cars/brands/${marca}/models/${modelo}/years/${ano}`);
     const data = await res.json()
-
-    return new Response(JSON.stringify(data), {
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'public, max-age=2592000',
-      },
-    })
+    return { statusCode: 200, headers: { "content-type": "application/json" }, body: JSON.stringify(data) }
   } catch {
-    return new Response(JSON.stringify({ error: 'fipe_unavailable' }), {
-      status: 502,
-      headers: { 'Content-Type': 'application/json' },
-    })
+    return { statusCode: 502, body: JSON.stringify({ error: "fipe_unavailable" }) }
   }
 }
