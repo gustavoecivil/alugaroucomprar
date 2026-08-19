@@ -95,6 +95,7 @@ export default function SimuladorForm({ onCompare }: SimuladorFormProps) {
 
   const [custoCombustivelEstimado, setCustoCombustivelEstimado] = useState(0)
   const [consumoFipe, setConsumoFipe] = useState<number | null>(null)
+  const [combustivelVeiculo, setCombustivelVeiculo] = useState<string | null>(null)
 
   const [modoRisco, setModoRisco] = useState<'manual' | 'automatico'>('manual')
   const [nivelRisco, setNivelRisco] = useState<NivelRisco>('medio')
@@ -167,7 +168,11 @@ export default function SimuladorForm({ onCompare }: SimuladorFormProps) {
       </Card>
 
       <Card titulo="Custo de combustível estimado">
-        <CombustivelAutofill onCustoCalculado={setCustoCombustivelEstimado} consumoAutofill={consumoFipe} />
+        <CombustivelAutofill
+          onCustoCalculado={setCustoCombustivelEstimado}
+          consumoAutofill={consumoFipe}
+          combustivelVeiculo={combustivelVeiculo}
+        />
         {custoCombustivelEstimado > 0 && (
           <p className="text-xs text-[var(--foreground)]/60 sm:col-span-2">
             Use esse valor como referência pra preencher manualmente os campos que fizer sentido
@@ -181,6 +186,7 @@ export default function SimuladorForm({ onCompare }: SimuladorFormProps) {
         <FipeAutofill
           onPriceResolved={(preco) => setComprarDados((prev) => ({ ...prev, precoVeiculo: preco }))}
           onConsumoResolved={setConsumoFipe}
+          onCombustivelResolved={setCombustivelVeiculo}
         />
 
         <NumberField

@@ -5,15 +5,73 @@ import InfoTooltip from './InfoTooltip'
 interface CombustivelAutofillProps {
   onCustoCalculado: (valor: number) => void
   consumoAutofill?: number | null
+  combustivelVeiculo?: string | null
 }
 
 interface PrecoUf {
   gasolina: number
   etanol: number
+  diesel: number
   semana_referencia: string
 }
 
-type TipoCombustivel = 'gasolina' | 'etanol' | 'eletrico'
+type TipoCombustivel = 'gasolina' | 'etanol' | 'diesel' | 'eletrico'
+
+const OPCOES_PADRAO: TipoCombustivel[] = ['gasolina', 'etanol', 'eletrico']
+
+const LABEL_COMBUSTIVEL: Record<TipoCombustivel, string> = {
+  gasolina: 'Gasolina',
+  etanol: 'Etanol',
+  diesel: 'Diesel',
+  eletrico: 'Elétrico',
+}
+
+// Remove acentos e deixa minusculo, pra comparar sem depender de
+// maiuscula/acentuacao exata do que a API da FIPE devolver.
+const DIACRITICOS_REGEX = new RegExp('[' + String.fromCharCode(0x0300) + '-' + String.fromCharCode(0x036f) + ']', 'g')
+
+function normalizar(texto: string): string {
+  return texto.normalize('NFD').replace(DIACRITICOS_REGEX, '').toLowerCase().trim()
+}
+
+// A API da FIPE tem um bug real de encoding: confirmado numa chamada
+// direta (byte a byte) que o campo "fuel" pra veiculos eletricos vem
+// como "ElÃ©trico" -- os bytes UTF-8 de "Elétrico" foram
+// reinterpretados como Latin-1 e regravados como UTF-8 (mojibake),
+// virando uma string diferente de "Elétrico" de verdade. normalizar()
+// sozinho nao resolve isso (o "é" quebrado vira dois caracteres, "Ã" +
+// "©", nao um "e" com acento). Em vez de tentar consertar o mojibake em
+// geral (arriscado, pode corromper string que ja estava certa),
+// comparamos contra as duas formas conhecidas: a correta e a
+// quebrada -- calculada em runtime a partir da string correta, sem
+// precisar escrever o texto corrompido no codigo-fonte.
+function paraVarianteMojibake(textoCorreto: string): string {
+  const bytes = new TextEncoder().encode(textoCorreto)
+  let resultado = ''
+  for (const byte of bytes) resultado += String.fromCharCode(byte)
+  return resultado
+}
+
+const ELETRICO_VARIANTES = new Set([normalizar('Elétrico'), normalizar(paraVarianteMojibake('Elétrico'))])
+const ALCOOL_VARIANTES = new Set([normalizar('Álcool'), normalizar(paraVarianteMojibake('Álcool'))])
+
+// O campo "fuel" da API da FIPE (ver FipeAutofill.tsx) — valores reais
+// confirmados: "Gasolina", "Flex", "Diesel", "Elétrico" (com o bug de
+// encoding acima), "Álcool", "Híbrido". Híbrido não tem regra clara
+// (mistura elétrico com combustão) então cai no fallback de 3 opções,
+// igual um valor desconhecido ou ausente.
+function opcoesParaCombustivelFipe(combustivelFipe: string | null | undefined): TipoCombustivel[] {
+  if (!combustivelFipe) return OPCOES_PADRAO
+
+  const normalizado = normalizar(combustivelFipe)
+
+  if (normalizado === 'flex') return ['gasolina', 'etanol']
+  if (normalizado === 'gasolina') return ['gasolina']
+  if (normalizado === 'diesel') return ['diesel']
+  if (ELETRICO_VARIANTES.has(normalizado)) return ['eletrico']
+  if (ALCOOL_VARIANTES.has(normalizado)) return ['etanol']
+  return OPCOES_PADRAO
+}
 
 const UFS: { value: string; label: string }[] = [
   { value: 'AC', label: 'Acre' },
@@ -51,7 +109,11 @@ const selectClassName =
 const inputClassName =
   'w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-[var(--foreground)] outline-none focus:border-[var(--accent)]'
 
-export default function CombustivelAutofill({ onCustoCalculado, consumoAutofill }: CombustivelAutofillProps) {
+export default function CombustivelAutofill({
+  onCustoCalculado,
+  consumoAutofill,
+  combustivelVeiculo,
+}: CombustivelAutofillProps) {
   const [precos, setPrecos] = useState<Record<string, PrecoUf> | null>(null)
   const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState(false)
@@ -69,6 +131,22 @@ export default function CombustivelAutofill({ onCustoCalculado, consumoAutofill 
     if (consumoAutofill != null && consumoAutofill > 0) {
       setConsumo(consumoAutofill)
       setConsumoPreenchidoAuto(true)
+    }
+  }
+
+  const opcoesDisponiveis = useMemo(() => opcoesParaCombustivelFipe(combustivelVeiculo), [combustivelVeiculo])
+  const ehFlex = opcoesDisponiveis.includes('gasolina') && opcoesDisponiveis.includes('etanol')
+
+  // Se o carro escolhido no FipeAutofill so aceita um combustivel (ou um
+  // subconjunto) diferente do que estava selecionado, troca pra primeira
+  // opcao valida em vez de deixar o select num valor que nao existe mais
+  // na lista (ex.: tinha "Eletrico" escolhido e o usuario trocou pra um
+  // carro a Diesel).
+  const [ultimasOpcoes, setUltimasOpcoes] = useState(opcoesDisponiveis)
+  if (opcoesDisponiveis !== ultimasOpcoes) {
+    setUltimasOpcoes(opcoesDisponiveis)
+    if (!opcoesDisponiveis.includes(combustivelEscolhido)) {
+      setCombustivelEscolhido(opcoesDisponiveis[0])
     }
   }
 
@@ -147,21 +225,22 @@ export default function CombustivelAutofill({ onCustoCalculado, consumoAutofill 
         </label>
 
         <label className="flex flex-col gap-1 text-sm">
-          <span className="text-[var(--foreground)]/80">Combustível</span>
+          <span className="text-[var(--foreground)]/80">
+            Combustível
+            {opcoesDisponiveis.length < OPCOES_PADRAO.length && (
+              <InfoTooltip texto="Opções filtradas pelo combustível real do veículo escolhido na FIPE acima." />
+            )}
+          </span>
           <select
             value={combustivelEscolhido}
             onChange={(e) => setCombustivelEscolhido(e.target.value as TipoCombustivel)}
             className={selectClassName}
           >
-            <option value="gasolina" className="bg-[var(--background)]">
-              Gasolina
-            </option>
-            <option value="etanol" className="bg-[var(--background)]">
-              Etanol
-            </option>
-            <option value="eletrico" className="bg-[var(--background)]">
-              Elétrico
-            </option>
+            {opcoesDisponiveis.map((opcao) => (
+              <option key={opcao} value={opcao} className="bg-[var(--background)]">
+                {LABEL_COMBUSTIVEL[opcao]}
+              </option>
+            ))}
           </select>
         </label>
       </div>
@@ -180,7 +259,10 @@ export default function CombustivelAutofill({ onCustoCalculado, consumoAutofill 
           )
         : precoUf && (
             <p className="text-xs text-[var(--foreground)]/60">
-              Gasolina: R$ {precoUf.gasolina.toFixed(2)}/l · Etanol: R$ {precoUf.etanol.toFixed(2)}/l
+              {opcoesDisponiveis
+                .filter((opcao): opcao is 'gasolina' | 'etanol' | 'diesel' => opcao !== 'eletrico')
+                .map((opcao) => `${LABEL_COMBUSTIVEL[opcao]}: R$ ${precoUf[opcao].toFixed(2)}/l`)
+                .join(' · ')}
               {' '}
               (semana de referência: {precoUf.semana_referencia})
             </p>
@@ -202,7 +284,13 @@ export default function CombustivelAutofill({ onCustoCalculado, consumoAutofill 
           <span className="text-[var(--foreground)]/80">
             Consumo médio
             {consumoPreenchidoAuto && (
-              <InfoTooltip texto="Consumo estimado pelo INMETRO para este veículo" />
+              <InfoTooltip
+                texto={
+                  ehFlex && combustivelEscolhido === 'etanol'
+                    ? 'Consumo estimado pelo INMETRO para este veículo — mas o INMETRO não publica um valor separado para etanol dentro do Flex, então este número é o mesmo usado para gasolina. Na prática o consumo com etanol é menor (mais litros por km rodado); trate como aproximação, não medição.'
+                    : 'Consumo estimado pelo INMETRO para este veículo'
+                }
+              />
             )}
           </span>
           <div className="flex items-center gap-2">

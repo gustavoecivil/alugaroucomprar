@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 interface FipeAutofillProps {
   onPriceResolved: (preco: number) => void
   onConsumoResolved?: (consumo: number) => void
+  onCombustivelResolved?: (combustivel: string) => void
 }
 
 interface FipeItem {
@@ -24,7 +25,7 @@ function parsePrecoFipe(valor: string): number | null {
 const selectClassName =
   'w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-[var(--foreground)] outline-none focus:border-[var(--accent)] disabled:cursor-not-allowed disabled:text-[var(--foreground)]/40'
 
-export default function FipeAutofill({ onPriceResolved, onConsumoResolved }: FipeAutofillProps) {
+export default function FipeAutofill({ onPriceResolved, onConsumoResolved, onCombustivelResolved }: FipeAutofillProps) {
   const [marcas, setMarcas] = useState<FipeItem[]>([])
   const [modelos, setModelos] = useState<FipeItem[]>([])
   const [anos, setAnos] = useState<FipeItem[]>([])
@@ -130,6 +131,11 @@ export default function FipeAutofill({ onPriceResolved, onConsumoResolved }: Fip
 
       const consumo = consumoPorVeiculo[`${marcaSelecionada}-${modeloSelecionado}`]
       if (consumo) onConsumoResolved?.(consumo.consumo_km_l)
+
+      // "fuel" e o campo real da API da FIPE (confirmado por chamada direta:
+      // valores como "Gasolina", "Flex", "Diesel", "Eletrico" -- ver
+      // CombustivelAutofill.tsx pra como isso filtra as opcoes do select).
+      if (typeof data.fuel === 'string' && data.fuel) onCombustivelResolved?.(data.fuel)
     } catch {
       setErro(true)
     } finally {

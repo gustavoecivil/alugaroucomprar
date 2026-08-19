@@ -1,135 +1,162 @@
 {
   "AC": {
+    "diesel": 8.05,
     "etanol": 4.97,
     "gasolina": 7.26,
     "semana_referencia": "2026-08-02"
   },
   "AL": {
+    "diesel": 6.96,
     "etanol": 5.02,
     "gasolina": 6.76,
     "semana_referencia": "2026-08-02"
   },
   "AM": {
+    "diesel": 7.13,
     "etanol": 5.0,
     "gasolina": 7.31,
     "semana_referencia": "2026-08-02"
   },
   "AP": {
+    "diesel": 7.51,
     "etanol": 5.81,
     "gasolina": 6.67,
-    "semana_referencia": "2026-07-26"
+    "semana_referencia": "2026-08-02"
   },
   "BA": {
+    "diesel": 7.59,
     "etanol": 4.66,
     "gasolina": 6.93,
     "semana_referencia": "2026-08-02"
   },
   "CE": {
+    "diesel": 6.95,
     "etanol": 4.85,
     "gasolina": 6.67,
     "semana_referencia": "2026-08-02"
   },
   "DF": {
+    "diesel": 6.89,
     "etanol": 4.15,
     "gasolina": 6.51,
     "semana_referencia": "2026-08-02"
   },
   "ES": {
+    "diesel": 6.89,
     "etanol": 4.66,
     "gasolina": 6.52,
     "semana_referencia": "2026-08-02"
   },
   "GO": {
+    "diesel": 6.71,
     "etanol": 4.2,
     "gasolina": 6.64,
     "semana_referencia": "2026-08-02"
   },
   "MA": {
+    "diesel": 7.04,
     "etanol": 5.06,
     "gasolina": 6.71,
     "semana_referencia": "2026-08-02"
   },
   "MG": {
+    "diesel": 6.73,
     "etanol": 3.94,
     "gasolina": 6.19,
     "semana_referencia": "2026-08-02"
   },
   "MS": {
+    "diesel": 6.79,
     "etanol": 3.9,
     "gasolina": 6.43,
     "semana_referencia": "2026-08-02"
   },
   "MT": {
+    "diesel": 6.92,
     "etanol": 3.71,
     "gasolina": 6.73,
     "semana_referencia": "2026-08-02"
   },
   "PA": {
+    "diesel": 7.27,
     "etanol": 4.73,
     "gasolina": 6.69,
     "semana_referencia": "2026-08-02"
   },
   "PB": {
+    "diesel": 7.04,
     "etanol": 4.72,
     "gasolina": 6.47,
     "semana_referencia": "2026-08-02"
   },
   "PE": {
+    "diesel": 6.84,
     "etanol": 5.08,
     "gasolina": 6.9,
     "semana_referencia": "2026-08-02"
   },
   "PI": {
+    "diesel": 7.31,
     "etanol": 4.87,
     "gasolina": 6.86,
     "semana_referencia": "2026-08-02"
   },
   "PR": {
+    "diesel": 6.9,
     "etanol": 4.13,
     "gasolina": 6.66,
     "semana_referencia": "2026-08-02"
   },
   "RJ": {
+    "diesel": 7.03,
     "etanol": 4.72,
     "gasolina": 6.61,
     "semana_referencia": "2026-08-02"
   },
   "RN": {
+    "diesel": 7.12,
     "etanol": 5.23,
     "gasolina": 6.79,
     "semana_referencia": "2026-08-02"
   },
   "RO": {
+    "diesel": 7.36,
     "etanol": 5.26,
     "gasolina": 7.36,
     "semana_referencia": "2026-08-02"
   },
   "RR": {
+    "diesel": 7.42,
     "etanol": 5.41,
     "gasolina": 7.57,
     "semana_referencia": "2026-08-02"
   },
   "RS": {
+    "diesel": 6.59,
     "etanol": 4.48,
     "gasolina": 6.28,
     "semana_referencia": "2026-08-02"
   },
   "SC": {
+    "diesel": 6.79,
     "etanol": 4.45,
     "gasolina": 6.53,
     "semana_referencia": "2026-08-02"
   },
   "SE": {
+    "diesel": 6.86,
     "etanol": 5.34,
     "gasolina": 7.03,
     "semana_referencia": "2026-08-02"
   },
   "SP": {
+    "diesel": 6.9,
     "etanol": 3.63,
     "gasolina": 6.35,
     "semana_referencia": "2026-08-02"
   },
   "TO": {
+    "diesel": 7.01,
     "etanol": 5.04,
     "gasolina": 7.07,
     "semana_referencia": "2026-08-02"

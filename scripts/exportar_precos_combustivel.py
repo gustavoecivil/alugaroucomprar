@@ -1,8 +1,14 @@
 """
-Exporta um snapshot estatico do preco mais recente de gasolina e etanol
-por UF, a partir do DuckDB do projeto indice-gsa-veicular (repositorio
-separado, mesmo autor), pra public/dados/precos-combustivel.json aqui no
-alugaroucomprar.
+Exporta um snapshot estatico do preco mais recente de gasolina, etanol e
+diesel por UF, a partir do DuckDB do projeto indice-gsa-veicular
+(repositorio separado, mesmo autor), pra
+public/dados/precos-combustivel.json aqui no alugaroucomprar.
+
+Diesel usa OLEO DIESEL S10 (nao OLEO DIESEL comum) porque e o unico
+tipo que os veiculos diesel a venda hoje no Brasil usam (regra de
+emissao) — mesma escolha ja feita no estudo de custo real de posse do
+indice-gsa-veicular. Confirmado cobertura nas 27 UFs antes de adicionar
+ao FUEL_MAP.
 
 Script solto, nao faz parte do build do site — roda uma vez (ou sempre
 que quiser atualizar o snapshot) pra gerar o JSON estatico que o
@@ -29,6 +35,7 @@ OUTPUT_PATH = Path(__file__).resolve().parents[1] / "public" / "dados" / "precos
 FUEL_MAP = {
     "gasolina": "GASOLINA COMUM",
     "etanol": "ETANOL HIDRATADO",
+    "diesel": "OLEO DIESEL S10",
 }
 
 
@@ -69,10 +76,12 @@ def main() -> None:
         con.close()
 
     faltando = [
-        uf for uf, valores in dados.items() if "gasolina" not in valores or "etanol" not in valores
+        uf
+        for uf, valores in dados.items()
+        if "gasolina" not in valores or "etanol" not in valores or "diesel" not in valores
     ]
     if faltando:
-        print(f"[aviso] UFs sem os dois combustiveis (gasolina e etanol): {faltando}")
+        print(f"[aviso] UFs sem os tres combustiveis (gasolina, etanol, diesel): {faltando}")
 
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
