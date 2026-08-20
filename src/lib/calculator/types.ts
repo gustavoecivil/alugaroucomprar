@@ -4,6 +4,7 @@ export type NivelRisco = 'baixo' | 'medio' | 'alto'
 export interface EntradaComum {
   horizonteMeses: number
   taxaCustoOportunidadeAnual: number // % ao ano, ex: 10.5
+  kmAno: number
 }
 
 export interface EntradaComprar {

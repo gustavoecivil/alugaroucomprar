@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import {
   compararCenarios,
@@ -15,6 +15,8 @@ import { glossario } from '../lib/glossario'
 import InfoTooltip from './InfoTooltip'
 import FipeAutofill from './FipeAutofill'
 import CombustivelAutofill from './CombustivelAutofill'
+import ValorComFonte from './ValorComFonte'
+import { KM_ANO, PERFIL_DESCRICAO, PERFIL_LABELS, type PerfilUso } from '../lib/perfilUso'
 
 interface SimuladorFormProps {
   onCompare: (resultados: CenarioRankeado[]) => void
@@ -75,12 +77,16 @@ const CATEGORIAS_VEICULO: { value: CategoriaVeiculo; label: string }[] = [
 ]
 
 const HORIZONTE_OPCOES = [6, 12, 18, 24, 36]
+const PERFIS_USO: PerfilUso[] = ['particular', 'app', 'fimdesemana', 'trabalho']
 
 export default function SimuladorForm({ onCompare }: SimuladorFormProps) {
   const [comum, setComum] = useState<EntradaComum>({
     horizonteMeses: 24,
     taxaCustoOportunidadeAnual: 10,
+    kmAno: 15000,
   })
+  const [perfilUso, setPerfilUso] = useState<PerfilUso>('particular')
+  const [kmAno, setKmAno] = useState(KM_ANO.particular)
 
   const [comprarDados, setComprarDados] = useState<Omit<EntradaComprar, 'risco'>>({
     precoVeiculo: 0,
@@ -114,6 +120,18 @@ export default function SimuladorForm({ onCompare }: SimuladorFormProps) {
     kmMensalIncluso: 0,
     prazoMinimoMeses: 0,
   })
+  const [ipvaAliquotas, setIpvaAliquotas] = useState<unknown[]>([])
+
+  useEffect(() => {
+    void fetch('/dados/ipva-aliquotas.json')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: unknown) => {
+        if (data && typeof data === 'object' && 'aliquotas' in data && Array.isArray(data.aliquotas)) {
+          setIpvaAliquotas(data.aliquotas)
+        }
+      })
+      .catch(() => undefined)
+  }, [])
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -122,7 +140,7 @@ export default function SimuladorForm({ onCompare }: SimuladorFormProps) {
       modoRisco === 'manual' ? { modo: 'manual', nivel: nivelRisco } : { modo: 'automatico', categoria: categoriaRisco }
 
     const resultados = compararCenarios({
-      comum,
+      comum: { ...comum, kmAno },
       comprar: { ...comprarDados, risco },
       locar,
       assinar,
@@ -165,6 +183,26 @@ export default function SimuladorForm({ onCompare }: SimuladorFormProps) {
           suffix="% ao ano"
           tooltip={glossario.taxaCustoOportunidade}
         />
+        <label className="flex flex-col gap-1 text-sm">
+          <span className="text-[var(--foreground)]/80">Perfil de uso</span>
+          <select
+            value={perfilUso}
+            onChange={(e) => {
+              const perfil = e.target.value as PerfilUso
+              setPerfilUso(perfil)
+              setKmAno(KM_ANO[perfil])
+            }}
+            className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-[var(--foreground)] outline-none focus:border-[var(--accent)]"
+          >
+            {PERFIS_USO.map((perfil) => (
+              <option key={perfil} value={perfil} className="bg-[var(--background)]">
+                {PERFIL_LABELS[perfil]}
+              </option>
+            ))}
+          </select>
+          <span className="text-xs text-[var(--foreground)]/60">{PERFIL_DESCRICAO[perfilUso]}</span>
+        </label>
+        <NumberField label="Km por ano" value={kmAno} onChange={setKmAno} placeholder="Ex: 15000" />
       </Card>
 
       <Card titulo="Custo de combustível estimado">
@@ -172,6 +210,7 @@ export default function SimuladorForm({ onCompare }: SimuladorFormProps) {
           onCustoCalculado={setCustoCombustivelEstimado}
           consumoAutofill={consumoFipe}
           combustivelVeiculo={combustivelVeiculo}
+          kmAno={kmAno}
         />
         {custoCombustivelEstimado > 0 && (
           <p className="text-xs text-[var(--foreground)]/60 sm:col-span-2">
@@ -208,25 +247,39 @@ export default function SimuladorForm({ onCompare }: SimuladorFormProps) {
           onChange={(v) => setComprarDados((prev) => ({ ...prev, numeroParcelas: v }))}
           placeholder="Ex: 48"
         />
-        <NumberField
-          label="Taxa de juros mensal"
+        <ValorComFonte
+          label="Taxa de financiamento"
           value={comprarDados.taxaJurosMensal}
-          onChange={(v) => setComprarDados((prev) => ({ ...prev, taxaJurosMensal: v }))}
+          onChange={(v) => setComprarDados((prev) => ({ ...prev, taxaJurosMensal: v ?? 0 }))}
           placeholder="Ex: 1,5"
+          sufixo="% a.m."
+          parceiros={[
+            { label: 'Comparabem', url: 'https://www.comparabem.com.br' },
+            { label: 'CompareFinanciamento', url: 'https://www.comparefinanciamento.com.br' },
+            { label: 'Creditas', url: 'https://www.creditas.com/automoveis' },
+          ]}
           suffix="% ao mês"
         />
-        <NumberField
-          label="IPVA anual"
+        <ValorComFonte
+          label="IPVA anual (R$)"
           value={comprarDados.ipvaAnual}
-          onChange={(v) => setComprarDados((prev) => ({ ...prev, ipvaAnual: v }))}
+          onChange={(v) => setComprarDados((prev) => ({ ...prev, ipvaAnual: v ?? 0 }))}
           placeholder="Ex: 2500"
-          tooltip={glossario.ipva}
+          sufixo="R$"
+          tooltip="O IPVA costuma variar de 1% a 4% do valor FIPE, dependendo do estado."
+          autoValue={ipvaAliquotas.length > 0 ? null : undefined}
         />
-        <NumberField
+        <ValorComFonte
           label="Seguro anual"
           value={comprarDados.seguroAnual}
-          onChange={(v) => setComprarDados((prev) => ({ ...prev, seguroAnual: v }))}
+          onChange={(v) => setComprarDados((prev) => ({ ...prev, seguroAnual: v ?? 0 }))}
           placeholder="Ex: 3200"
+          sufixo="R$"
+          parceiros={[
+            { label: 'ComparaOnline', url: 'https://www.comparaonline.com.br/seguro-auto' },
+            { label: 'Minuto Seguros', url: 'https://www.minutoseguros.com.br/seguro-auto' },
+            { label: 'MeuSeguroMaisBarato', url: 'https://www.meuseguromaisbarato.com.br' },
+          ]}
         />
         <NumberField
           label="Manutenção mensal"
@@ -313,11 +366,18 @@ export default function SimuladorForm({ onCompare }: SimuladorFormProps) {
       </Card>
 
       <Card titulo="Locar">
-        <NumberField
-          label="Mensalidade"
+        <ValorComFonte
+          label="Mensalidade de locação/assinatura"
           value={locar.mensalidade}
-          onChange={(v) => setLocar((prev) => ({ ...prev, mensalidade: v }))}
+          onChange={(v) => setLocar((prev) => ({ ...prev, mensalidade: v ?? 0 }))}
           placeholder="Ex: 2500"
+          sufixo="R$"
+          parceiros={[
+            { label: 'Rentcars', url: 'https://www.rentcars.com' },
+            { label: 'Localiza Meoo', url: 'https://www.meoo.com.br' },
+            { label: 'Movida', url: 'https://www.movida.com.br' },
+            { label: 'Unidas', url: 'https://www.unidas.com.br' },
+          ]}
         />
         <NumberField
           label="Km mensal incluso"
@@ -342,11 +402,18 @@ export default function SimuladorForm({ onCompare }: SimuladorFormProps) {
       </Card>
 
       <Card titulo="Assinar">
-        <NumberField
-          label="Mensalidade"
+        <ValorComFonte
+          label="Mensalidade de locação/assinatura"
           value={assinar.mensalidade}
-          onChange={(v) => setAssinar((prev) => ({ ...prev, mensalidade: v }))}
+          onChange={(v) => setAssinar((prev) => ({ ...prev, mensalidade: v ?? 0 }))}
           placeholder="Ex: 3000"
+          sufixo="R$"
+          parceiros={[
+            { label: 'Rentcars', url: 'https://www.rentcars.com' },
+            { label: 'Localiza Meoo', url: 'https://www.meoo.com.br' },
+            { label: 'Movida', url: 'https://www.movida.com.br' },
+            { label: 'Unidas', url: 'https://www.unidas.com.br' },
+          ]}
         />
         <NumberField
           label="Km mensal incluso"

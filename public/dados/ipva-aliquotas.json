@@ -1,0 +1,8 @@
+{
+  "_meta": {
+    "fonte": "Secretarias da Fazenda estaduais",
+    "atualizado_em": null,
+    "observacao": "Preencher via script de export do indice-gsa-veicular. Aliquota em % sobre o valor venal FIPE."
+  },
+  "aliquotas": []
+}

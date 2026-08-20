@@ -6,6 +6,7 @@ interface CombustivelAutofillProps {
   onCustoCalculado: (valor: number) => void
   consumoAutofill?: number | null
   combustivelVeiculo?: string | null
+  kmAno?: number
 }
 
 interface PrecoUf {
@@ -113,6 +114,7 @@ export default function CombustivelAutofill({
   onCustoCalculado,
   consumoAutofill,
   combustivelVeiculo,
+  kmAno,
 }: CombustivelAutofillProps) {
   const [precos, setPrecos] = useState<Record<string, PrecoUf> | null>(null)
   const [carregando, setCarregando] = useState(true)
@@ -149,6 +151,10 @@ export default function CombustivelAutofill({
       setCombustivelEscolhido(opcoesDisponiveis[0])
     }
   }
+
+  useEffect(() => {
+    if (kmAno != null) setKmMes(kmAno / 12)
+  }, [kmAno])
 
   useEffect(() => {
     async function carregarPrecos() {

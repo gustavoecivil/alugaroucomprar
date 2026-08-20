@@ -22,7 +22,7 @@ describe('getFaixaRisco', () => {
 
 describe('calcularComprar', () => {
   it('calcula um cenário à vista (sem financiamento)', () => {
-    const comum: EntradaComum = { horizonteMeses: 12, taxaCustoOportunidadeAnual: 10 }
+    const comum: EntradaComum = { horizonteMeses: 12, taxaCustoOportunidadeAnual: 10, kmAno: 15000 }
     const entrada: EntradaComprar = {
       precoVeiculo: 60000,
       valorEntrada: 60000,
@@ -47,7 +47,7 @@ describe('calcularComprar', () => {
   })
 
   it('calcula saldo devedor quando o horizonte é menor que o número de parcelas', () => {
-    const comum: EntradaComum = { horizonteMeses: 12, taxaCustoOportunidadeAnual: 0 }
+    const comum: EntradaComum = { horizonteMeses: 12, taxaCustoOportunidadeAnual: 0, kmAno: 15000 }
     const entrada: EntradaComprar = {
       precoVeiculo: 50000,
       valorEntrada: 10000,
@@ -69,7 +69,7 @@ describe('calcularComprar', () => {
 
 describe('calcularLocar', () => {
   it('calcula o custo total como mensalidade x horizonte', () => {
-    const comum: EntradaComum = { horizonteMeses: 24, taxaCustoOportunidadeAnual: 10 }
+    const comum: EntradaComum = { horizonteMeses: 24, taxaCustoOportunidadeAnual: 10, kmAno: 15000 }
     const entrada: EntradaLocar = {
       mensalidade: 2500,
       kmMensalIncluso: 2000,
@@ -88,7 +88,7 @@ describe('calcularLocar', () => {
 
 describe('calcularAssinar', () => {
   it('dilui o prazo mínimo no custo mensal quando o horizonte é menor', () => {
-    const comum: EntradaComum = { horizonteMeses: 6, taxaCustoOportunidadeAnual: 10 }
+    const comum: EntradaComum = { horizonteMeses: 6, taxaCustoOportunidadeAnual: 10, kmAno: 15000 }
     const entrada: EntradaAssinar = {
       mensalidade: 3000,
       kmMensalIncluso: 3000,

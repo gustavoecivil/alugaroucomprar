@@ -105,7 +105,13 @@ export default function FipeAutofill({
         `/.netlify/functions/fipe-anos?marca=${encodeURIComponent(marcaSelecionada)}&modelo=${encodeURIComponent(modelo)}`,
       )
       if (!res.ok) throw new Error('fipe_unavailable')
-      setAnos(await res.json())
+      const anosRecebidos = (await res.json()) as FipeItem[]
+      const anoMinimo = new Date().getFullYear() - 3
+      const anosRecentes = anosRecebidos.filter((item) => {
+        const sequencia = /\d{4}/.exec(`${item.name} ${item.code}`)?.[0]
+        return sequencia ? Number.parseInt(sequencia, 10) >= anoMinimo : false
+      })
+      setAnos(anosRecentes.length > 0 ? anosRecentes : anosRecebidos)
     } catch {
       setErro(true)
     } finally {
@@ -166,6 +172,9 @@ export default function FipeAutofill({
             <option value="" className="bg-[var(--background)]">{carregandoAnos ? 'Carregando...' : 'Selecione'}</option>
             {anos.map((ano) => <option key={ano.code} value={ano.code} className="bg-[var(--background)]">{ano.name}</option>)}
           </select>
+          <span className="text-xs text-[var(--foreground)]/50">
+            Catálogo limitado aos últimos 3 anos-modelo — perfil real da frota de locadora (idade média 16,4 meses, ABLA).
+          </span>
         </label>
       </div>
       {carregandoPreco && <p className="text-xs text-[var(--foreground)]/60">Buscando preço na FIPE...</p>}
