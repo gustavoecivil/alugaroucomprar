@@ -1,5 +1,7 @@
 import type { EntradaComprar, EntradaComum, ResultadoCenario } from './types'
 import { getFaixaRisco } from './risco'
+import { calcularCustoCombustivelMensal } from './combustivel'
+import { fatorManutencaoPorKm } from '../perfilUso'
 
 // Parcela fixa pela tabela Price (sistema de amortização francês).
 function calcularParcelaPrice(valorFinanciado: number, taxaMensal: number, numeroParcelas: number): number {
@@ -34,7 +36,7 @@ export function calcularComprar(entrada: EntradaComprar, comum: EntradaComum): R
     valorRevendaEstimado,
     risco,
   } = entrada
-  const { horizonteMeses, taxaCustoOportunidadeAnual } = comum
+  const { horizonteMeses, taxaCustoOportunidadeAnual, kmAno, consumoKmL, precoCombustivel } = comum
 
   if (horizonteMeses <= 0) {
     throw new Error('horizonteMeses precisa ser maior que zero')
@@ -55,7 +57,9 @@ export function calcularComprar(entrada: EntradaComprar, comum: EntradaComum): R
   const anos = horizonteMeses / 12
   const custoIpva = ipvaAnual * anos
   const custoSeguro = seguroAnual * anos
-  const custoManutencao = manutencaoMensal * horizonteMeses
+  const custoManutencao = manutencaoMensal * fatorManutencaoPorKm(kmAno) * horizonteMeses
+  const custoCombustivelMensal = calcularCustoCombustivelMensal(kmAno, consumoKmL, precoCombustivel)
+  const custoCombustivel = custoCombustivelMensal * horizonteMeses
 
   // Custo de oportunidade: dinheiro da entrada que deixou de render à
   // taxaCustoOportunidadeAnual, pró-rata pelo horizonte (juros simples).
@@ -66,7 +70,7 @@ export function calcularComprar(entrada: EntradaComprar, comum: EntradaComum): R
   const valorRevendaMax = valorRevendaEstimado * (1 + margem)
 
   const custosFixos =
-    valorEntrada + custoParcelas + custoIpva + custoSeguro + custoManutencao + custoOportunidade + saldoDevedor
+    valorEntrada + custoParcelas + custoIpva + custoSeguro + custoManutencao + custoCombustivel + custoOportunidade + saldoDevedor
 
   const custoTotal = custosFixos - valorRevendaEstimado
   const custoTotalMin = custosFixos - valorRevendaMax // melhor revenda -> menor custo
@@ -79,5 +83,6 @@ export function calcularComprar(entrada: EntradaComprar, comum: EntradaComum): R
     custoTotal,
     saldoDevedor,
     valorRecuperado: valorRevendaEstimado,
+    custoCombustivelMensal,
   }
 }

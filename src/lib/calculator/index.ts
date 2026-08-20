@@ -8,6 +8,7 @@ export { getFaixaRisco, getRiscoSinistroRoubo } from './risco'
 export { calcularComprar } from './comprar'
 export { calcularLocar } from './locar'
 export { calcularAssinar } from './assinar'
+export { calcularCustoCombustivelMensal } from './combustivel'
 
 export type TipoCenario = 'comprar' | 'locar' | 'assinar'
 

@@ -4,6 +4,7 @@ import InfoTooltip from './InfoTooltip'
 
 interface CombustivelAutofillProps {
   onCustoCalculado: (valor: number) => void
+  onInputsResolved?: (consumoKmL: number | null, precoCombustivel: number | null) => void
   consumoAutofill?: number | null
   combustivelVeiculo?: string | null
   kmAno?: number
@@ -112,6 +113,7 @@ const inputClassName =
 
 export default function CombustivelAutofill({
   onCustoCalculado,
+  onInputsResolved,
   consumoAutofill,
   combustivelVeiculo,
   kmAno,
@@ -201,6 +203,10 @@ export default function CombustivelAutofill({
   useEffect(() => {
     onCustoCalculado(custoMensal)
   }, [custoMensal, onCustoCalculado])
+
+  useEffect(() => {
+    onInputsResolved?.(consumo > 0 ? consumo : null, precoCombustivel ?? null)
+  }, [consumo, onInputsResolved, precoCombustivel])
 
   return (
     <div className="flex flex-col gap-4 rounded-lg border border-white/10 bg-white/5 p-4 sm:col-span-2">

@@ -5,6 +5,8 @@ export interface EntradaComum {
   horizonteMeses: number
   taxaCustoOportunidadeAnual: number // % ao ano, ex: 10.5
   kmAno: number
+  consumoKmL: number | null
+  precoCombustivel: number | null
 }
 
 export interface EntradaComprar {
@@ -37,6 +39,7 @@ export interface ResultadoCenario {
   custoMensalMin: number // considerando a faixa de risco, quando aplicável
   custoMensalMax: number
   custoTotal: number
+  custoCombustivelMensal: number
   saldoDevedor?: number // só em Comprar financiado
   valorRecuperado?: number // só em Comprar
 }

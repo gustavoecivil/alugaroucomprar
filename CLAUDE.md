@@ -171,17 +171,26 @@ Documentação completa de cada fonte: `indice-gsa-veicular/docs/FONTES.md`
 
 ---
 
+### Decisões de modelagem
+
+- Combustível é pago pelo usuário nos três cenários: Comprar, Locar e Assinar.
+- A manutenção sensível à quilometragem se aplica apenas a Comprar; em Locar e Assinar, manutenção e risco de valor residual pertencem à locadora.
+- Depreciação orientada por quilometragem está pendente de dados reais que vinculem km à revenda no Índice GSA.
+- A modelagem de franquia de km para Locação/Assinatura (Opção B) fica adiada até a execução do robô Python de preços.
+
+---
+
 ## 8. Roadmap — próximos passos, em ordem de prioridade
 
-1. **Perfil de Uso** (particular/app/fim de semana/trabalho) — ajusta km/ano
+1. ✅ **Perfil de Uso** (particular/app/fim de semana/trabalho) — concluído: ajusta km/ano
    automaticamente, é o elo que conecta "dado real" com "decisão real do
    usuário" (uso muda o resultado do jeito certo)
-2. **`ValorComFonte`** — construir o componente, aplicar primeiro na taxa de
+2. ✅ **`ValorComFonte`** — concluído no formulário; taxa BCB pública permanece pendente
    financiamento (BCB, dado público, sem depender de parceria)
-2.5. **IPVA e outros impostos de compra** — autofill do campo "IPVA anual"
+2.5. **IPVA e outros impostos de compra** — scaffolded, aguardando dados reais; autofill do campo "IPVA anual"
    por UF, dado público (cada estado define a alíquota por lei) — mesma
    prioridade do BCB, sem depender de parceria comercial
-3. **Restrição de catálogo** — só anos-modelo dos últimos 3 anos (perfil real
+3. ✅ **Restrição de catálogo** — concluída: só anos-modelo dos últimos 3 anos (perfil real
    de carro de locadora, ABLA confirma idade média de 16,4 meses)
 4. **Redesign do Hero/visual geral** — tom mais profissional, menos
    sensacionalista (ver seção 6)

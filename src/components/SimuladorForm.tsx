@@ -16,7 +16,13 @@ import InfoTooltip from './InfoTooltip'
 import FipeAutofill from './FipeAutofill'
 import CombustivelAutofill from './CombustivelAutofill'
 import ValorComFonte from './ValorComFonte'
-import { KM_ANO, PERFIL_DESCRICAO, PERFIL_LABELS, type PerfilUso } from '../lib/perfilUso'
+import {
+  KM_ANO,
+  KM_ANO_REFERENCIA,
+  PERFIL_DESCRICAO,
+  PERFIL_LABELS,
+  type PerfilUso,
+} from '../lib/perfilUso'
 
 interface SimuladorFormProps {
   onCompare: (resultados: CenarioRankeado[]) => void
@@ -84,6 +90,8 @@ export default function SimuladorForm({ onCompare }: SimuladorFormProps) {
     horizonteMeses: 24,
     taxaCustoOportunidadeAnual: 10,
     kmAno: 15000,
+    consumoKmL: null,
+    precoCombustivel: null,
   })
   const [perfilUso, setPerfilUso] = useState<PerfilUso>('particular')
   const [kmAno, setKmAno] = useState(KM_ANO.particular)
@@ -208,6 +216,13 @@ export default function SimuladorForm({ onCompare }: SimuladorFormProps) {
       <Card titulo="Custo de combustível estimado">
         <CombustivelAutofill
           onCustoCalculado={setCustoCombustivelEstimado}
+          onInputsResolved={(consumoKmL, precoCombustivel) =>
+            setComum((prev) =>
+              prev.consumoKmL === consumoKmL && prev.precoCombustivel === precoCombustivel
+                ? prev
+                : { ...prev, consumoKmL, precoCombustivel },
+            )
+          }
           consumoAutofill={consumoFipe}
           combustivelVeiculo={combustivelVeiculo}
           kmAno={kmAno}
@@ -286,6 +301,7 @@ export default function SimuladorForm({ onCompare }: SimuladorFormProps) {
           value={comprarDados.manutencaoMensal}
           onChange={(v) => setComprarDados((prev) => ({ ...prev, manutencaoMensal: v }))}
           placeholder="Ex: 200"
+          tooltip={'Custo de manutenção ajustado pela quilometragem — referência de ' + KM_ANO_REFERENCIA.toLocaleString('pt-BR') + ' km/ano. Aplicado apenas no cenário Comprar, já que em locação e assinatura a manutenção é da locadora.'}
         />
         <NumberField
           label="Valor de revenda estimado"
